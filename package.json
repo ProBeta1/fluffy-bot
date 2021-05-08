@@ -1,0 +1,19 @@
+{
+  "name": "dbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.5.3",
+    "dotenv": "^9.0.0",
+    "mongoose": "^5.12.7",
+    "nodemon": "^2.0.7"
+  }
+}
