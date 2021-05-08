@@ -47,7 +47,7 @@ client.on("message", (message) => {
       message.reply("Enter details in this format : State City ContactNo");
     } else {
       message.reply(`Added oxygen can detail : ${args}`);
-      addOxy(message);
+      addOxy(args);
     }
   }
 });
