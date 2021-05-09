@@ -15,7 +15,7 @@ module.exports.getStateOxygen = async function (state) {
 };
 
 module.exports.postOxygen = async function (state, city, contact, name) {
-  let p = await oxygenDB.findOne({ city });
+  let p = await oxygenDB.findOne({ state, city, contact, name });
   if (p) {
     console.log("found you");
     return p;

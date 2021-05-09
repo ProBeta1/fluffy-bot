@@ -24,7 +24,31 @@ const init = async () => {
     })
     .catch((err) => console.log(err));
 
-  client.login(process.env.BOT_TOKEN);
+  await client.login(process.env.BOT_TOKEN);
+
+  const Twit = require("twit");
+
+  const T = new Twit({
+    consumer_key: process.env.API_KEY,
+    consumer_secret: process.env.API_SECRET_KEY,
+    access_token: process.env.ACCESS_KEY,
+    access_token_secret: process.env.ACCESS_SECRET,
+    bearer_token: process.env.BEARER_TOKEN,
+    timeout_ms: 1000,
+  });
+
+  const dest = "840941009030086686";
+
+  const stream = T.stream("statuses/filter", {
+    track: "covid india",
+  });
+
+  stream.on("tweet", (tweet) => {
+    console.log(tweet);
+    const twitterMessage = `Read the latest tweet by ${tweet.user.name} (@${tweet.user.screen_name}) here: https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`;
+    client.channels.cache.get(dest).send(twitterMessage);
+    return;
+  });
 };
 
 init();
