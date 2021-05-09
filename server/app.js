@@ -2,29 +2,38 @@ const Discord = require("discord.js");
 const mongoose = require("mongoose");
 
 const addOxy = require("./commands/addOxy");
+const getCityOxy = require("./commands/getCityOxy");
+const getStateOxy = require("./commands/getStateOxy");
 const help = require("./commands/help");
 require("dotenv").config();
 
 const client = new Discord.Client();
 
-client.login(process.env.BOT_TOKEN);
+client.commands = new Discord.Collection();
+client.data = require("./database/MongoDB.js");
+
+const init = async () => {
+  const uri = process.env.DB_URI;
+  mongoose
+    .connect(uri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    })
+    .then(() => {
+      console.log("MongoDB Connected");
+    })
+    .catch((err) => console.log(err));
+
+  client.login(process.env.BOT_TOKEN);
+};
+
+init();
 
 client.on("ready", () => {
   console.log("Bot is ready");
 });
 
 const prefix = process.env.PREFIX;
-
-const uri = process.env.DB_URI;
-mongoose
-  .connect(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log("MongoDB Connected");
-  })
-  .catch((err) => console.log(err));
 
 client.on("message", (message) => {
   if (!message.content.startsWith(prefix)) return;
@@ -43,11 +52,27 @@ client.on("message", (message) => {
   }
 
   if (command === "addoxy") {
-    if (!args.length) {
-      message.reply("Enter details in this format : State City ContactNo");
+    if (!args.length || args.length < 4) {
+      message.reply("Enter details in this format : State City ContactNo Name");
     } else {
-      message.reply(`Added oxygen can detail : ${args}`);
-      addOxy(args);
+      message.reply(`Added oxygen can details : ${args}`);
+      addOxy(message, args);
+    }
+  }
+
+  if (command === "getoxycity") {
+    if (!args.length) {
+      message.reply("Enter details in this format : City");
+    } else {
+      getCityOxy(message, args);
+    }
+  }
+
+  if (command === "getoxystate") {
+    if (!args.length) {
+      message.reply("Enter details in this format : State");
+    } else {
+      getStateOxy(message, args);
     }
   }
 });
